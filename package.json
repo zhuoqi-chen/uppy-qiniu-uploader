@@ -1,11 +1,13 @@
 {
   "name": "uppy-qiniu-uploader",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "uppy uploader plugin for qiniu.com",
-  "main": "index.js",
+  "main": "dist/uppy-qiniu-uploader.common.js",
+  "module": "dist/uppy-qiniu-uploader.esm.js",
+  "unpkg": "dist/uppy-qiniu-uploader.min.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel --version && babel src --source-maps -d dist"
+    "dev": "rollup -wm -c build/rollup.dev.config.js",
+    "build": "node build/build.main.js"
   },
   "repository": {
     "type": "git",
@@ -28,10 +30,17 @@
     "babel-plugin-transform-object-assign": "^6.22.0",
     "babel-preset-env": "^1.6.1",
     "eslint": "^4.19.1",
-    "eslint-config-standard": "^11.0.0"
+    "eslint-config-standard": "^11.0.0",
+    "rollup": "^0.58.1",
+    "rollup-plugin-babel": "^3.0.3",
+    "rollup-plugin-replace": "^2.0.0",
+    "uglify-js": "^3.3.22"
   },
   "dependencies": {
     "qiniu-js": "^2.2.2",
     "uppy": "^0.24.2"
-  }
+  },
+  "files": [
+    "dist"
+  ]
 }

@@ -44,6 +44,6 @@ export default class Qiniu extends Plugin {
     this.uppy.addUploader(this.Uploader)
   }
   uninstall () {
-    this.uppy.removePreProcessor(this.prepareUpload)
+    this.uppy.removeUploader(this.Uploader)
   }
 }
