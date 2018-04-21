@@ -1,4 +1,5 @@
 import Plugin from 'uppy/lib/core/Plugin'
+import {settle} from 'uppy/lib/core/Utils'
 import * as qiniu from 'qiniu-js'
 export default class Qiniu extends Plugin {
   constructor (uppy, opts) {
@@ -11,7 +12,7 @@ export default class Qiniu extends Plugin {
   }
   uploadFiles (files) {
     const me = this
-    const filesPromise = files.map(file => {
+    const promises = files.map(file => {
       return new Promise((resolve, reject) => {
         const observable = qiniu.upload(file.data, file.name, this.getToken())
         const observer = {
@@ -23,6 +24,7 @@ export default class Qiniu extends Plugin {
             })
           },
           error (err) {
+            me.uppy.emit('upload-error', file, err)
             reject(err)
           },
           complete (res) {
@@ -34,7 +36,7 @@ export default class Qiniu extends Plugin {
         me.uppy.emit('upload-started', file)
       })
     })
-    return Promise.all(filesPromise)
+    return settle(promises)
   }
   Uploader (fileIDs) {
     const files = fileIDs.map(fileID => this.uppy.getFile(fileID))
