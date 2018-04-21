@@ -52,7 +52,7 @@ function genConfig (opts) {
       banner,
       file: opts.file,
       format: opts.format,
-      name: 'JWTSSO'
+      name: 'Uppy.Qiniu'
     }
   }
 
