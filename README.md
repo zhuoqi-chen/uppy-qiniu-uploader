@@ -21,13 +21,12 @@ const uppy = Uppy({
     .use(Dashboard, {
         target: "#select-files",
         inline: true,
-        proudlyDisplayPoweredByUppy: false,
-        locale: zh_CN
+        proudlyDisplayPoweredByUppy: false
     })
     .use(Qiniu, {
         host: "http://p7fl7t6sj.bkt.clouddn.com",
         getToken() {
-            // return upload qiniu upload token
+            // return qiniu upload token
         }
     })
     .run();
