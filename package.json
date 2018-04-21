@@ -1,0 +1,37 @@
+{
+  "name": "uppy-qiniu-uploader",
+  "version": "1.0.0",
+  "description": "uppy uploader plugin for qiniu.com",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel --version && babel src --source-maps -d dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhuoqi-chen/uppy-qiniu-uploader.git"
+  },
+  "keywords": [
+    "qiniu",
+    "uppy",
+    "uploader"
+  ],
+  "author": "zhuoqi_chen@126.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zhuoqi-chen/uppy-qiniu-uploader/issues"
+  },
+  "homepage": "https://github.com/zhuoqi-chen/uppy-qiniu-uploader#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-es6-promise": "^1.1.1",
+    "babel-plugin-transform-object-assign": "^6.22.0",
+    "babel-preset-env": "^1.6.1",
+    "eslint": "^4.19.1",
+    "eslint-config-standard": "^11.0.0"
+  },
+  "dependencies": {
+    "qiniu-js": "^2.2.2",
+    "uppy": "^0.24.2"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "presets": [
+    ["env", {
+      "modules": false,
+      "loose": true
+    }]
+  ],
+  "plugins": [
+    "transform-object-assign",
+    "es6-promise"
+  ]
+}
