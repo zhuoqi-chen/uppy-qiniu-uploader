@@ -30,6 +30,10 @@ export default class Qiniu extends Plugin {
             reject(err)
           },
           complete (res) {
+            Object.assign(file.meta,{
+              qiniuKey:res.key,
+              qiniuHash:res.hash
+            })
             me.uppy.emit('upload-success', file, res, me.host + '/' + res.key)
             resolve()
           }
