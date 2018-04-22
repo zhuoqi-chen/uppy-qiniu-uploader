@@ -41,3 +41,5 @@ uppy.on("complete", result => {
 root URL of link uploaded file 
 ### getToken{Function}
 the method for get qiniu upload token
+### useKeyName{Boolean} 
+use file's hash to be file name save in qiniu cloud

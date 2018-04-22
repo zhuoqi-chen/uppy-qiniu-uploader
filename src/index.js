@@ -4,17 +4,19 @@ import * as qiniu from 'qiniu-js'
 export default class Qiniu extends Plugin {
   constructor (uppy, opts) {
     super(uppy, opts)
-    this.id = opts.id || 'Qiniu'
+    this.id = 'Qiniu'
     this.type = 'uploader'
     this.getToken = opts.getToken || (() => {})
     this.host = opts.host || ''
+    this.useKeyName = opts.useKeyName || false
     this.Uploader = this.Uploader.bind(this)
   }
   uploadFiles (files) {
     const me = this
     const promises = files.map(file => {
       return new Promise((resolve, reject) => {
-        const observable = qiniu.upload(file.data, file.name, this.getToken())
+        const fileName = this.useKeyName ? null : file.name
+        const observable = qiniu.upload(file.data, fileName, this.getToken())
         const observer = {
           next (res) {
             me.uppy.emit('upload-progress', file, {
