@@ -1,5 +1,5 @@
 /**
- * uppy-qiniu-uploader v0.0.3
+ * uppy-qiniu-uploader v0.0.4
  * (c) 2018 zhuoqi_chen@126.com
  * @license MIT
  */
@@ -20,6 +20,9 @@
   function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
   var _Promise = typeof Promise === 'undefined' ? require('es6-promise').Promise : Promise;
+  function isPromise(e) {
+    return !!e && typeof e.then == "function";
+  }
 
   var Qiniu = function (_Plugin) {
     _inherits(Qiniu, _Plugin);
@@ -31,7 +34,7 @@
 
       _this.id = 'Qiniu';
       _this.type = 'uploader';
-      _this.getToken = opts.getToken || function () {};
+      _this.getToken = opts.getToken;
       _this.host = opts.host || '';
       _this.useKeyName = opts.useKeyName || false;
       _this.Uploader = _this.Uploader.bind(_this);
@@ -43,32 +46,45 @@
 
       var me = this;
       var promises = files.map(function (file) {
-        return new _Promise(function (resolve, reject) {
-          var fileName = _this2.useKeyName ? null : file.name;
-          var observable = qiniu.upload(file.data, fileName, _this2.getToken());
-          var observer = {
-            next: function next(res) {
-              me.uppy.emit('upload-progress', file, {
-                uploader: me,
-                bytesUploaded: res.total.loaded,
-                bytesTotal: res.total.size
-              });
-            },
-            error: function error(err) {
-              me.uppy.emit('upload-error', file, err);
-              reject(err);
-            },
-            complete: function complete(res) {
-              _extends(file.meta, {
-                qiniuKey: res.key,
-                qiniuHash: res.hash
-              });
-              me.uppy.emit('upload-success', file, res, me.host + '/' + res.key);
-              resolve();
-            }
-          };
-          observable.subscribe(observer);
-          me.uppy.emit('upload-started', file);
+        var getToken = _this2.getToken();
+        if (!isPromise(getToken) && typeof getToken !== 'string') {
+          var err = new TypeError('The getToken option must be a function and its return value must be String Or Promise');
+          console.error(err);
+          throw err;
+        }
+        if (!isPromise(getToken)) {
+          getToken = new _Promise(function (resolve) {
+            resolve(getToken);
+          });
+        }
+        return getToken.then(function (token) {
+          return new _Promise(function (resolve, reject) {
+            var fileName = _this2.useKeyName ? null : file.name;
+            var observable = qiniu.upload(file.data, fileName, token);
+            var observer = {
+              next: function next(res) {
+                me.uppy.emit('upload-progress', file, {
+                  uploader: me,
+                  bytesUploaded: res.total.loaded,
+                  bytesTotal: res.total.size
+                });
+              },
+              error: function error(err) {
+                me.uppy.emit('upload-error', file, err);
+                reject(err);
+              },
+              complete: function complete(res) {
+                _extends(file.meta, {
+                  qiniuKey: res.key,
+                  qiniuHash: res.hash
+                });
+                me.uppy.emit('upload-success', file, res, me.host + '/' + res.key);
+                resolve();
+              }
+            };
+            observable.subscribe(observer);
+            me.uppy.emit('upload-started', file);
+          });
         });
       });
       return Utils.settle(promises);
