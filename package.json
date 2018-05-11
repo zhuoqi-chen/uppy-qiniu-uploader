@@ -1,6 +1,6 @@
 {
   "name": "uppy-qiniu-uploader",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "uppy uploader plugin for qiniu.com",
   "main": "dist/uppy-qiniu-uploader.common.js",
   "module": "dist/uppy-qiniu-uploader.esm.js",
